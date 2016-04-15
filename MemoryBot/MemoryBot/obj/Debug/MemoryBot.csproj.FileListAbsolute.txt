@@ -1,0 +1,25 @@
+c:\users\taylorc\documents\visual studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\MemoryBot.exe.config
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\obj\Debug\MemoryBot.csprojResolveAssemblyReference.cache
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\MemoryBot.exe
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\MemoryBot.pdb
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\MargieBot.dll
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\Microsoft.Win32.Primitives.dll
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\System.Net.WebSockets.Client.dll
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\System.Net.WebSockets.dll
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\System.Security.Cryptography.Algorithms.dll
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\System.Security.Cryptography.Encoding.dll
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\System.Security.Cryptography.Primitives.dll
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\System.Security.Cryptography.X509Certificates.dll
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\websocket-sharp.dll
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\obj\Debug\MemoryBot.exe
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\obj\Debug\MemoryBot.pdb
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\Bazam.dll
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\Newtonsoft.Json.dll
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\Newtonsoft.Json.xml
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\System.Web.Http.dll
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\System.Net.Http.Formatting.dll
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\System.Web.Http.xml
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\System.Net.Http.Formatting.xml
+C:\Users\TaylorC\Desktop\MemoryBot\MemoryBot\MemoryBot\bin\Debug\MemoryBot.exe.config
+C:\Users\TaylorC\Desktop\MemoryBot\MemoryBot\MemoryBot\obj\Debug\MemoryBot.exe
+C:\Users\TaylorC\Desktop\MemoryBot\MemoryBot\MemoryBot\obj\Debug\MemoryBot.pdb
