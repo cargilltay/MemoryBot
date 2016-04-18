@@ -28,7 +28,7 @@ namespace MemoryBot
                     memory.Say(new BotMessage() { Text = "Hi Taylor!" });
             };
 
-            await memory.Connect("***************");
+            await memory.Connect("************************************");
         }
 
         public static void InitResponses(Bot bot)

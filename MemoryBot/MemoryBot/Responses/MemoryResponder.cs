@@ -1,22 +1,21 @@
 ﻿using MargieBot.Models;
 using MargieBot.Responders;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using System.IO;
-using MemoryBot;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using Priority_Queue;
+using System.Threading;
 
 namespace MemoryBot.Responses
 {
     class MemoryResponder : IResponder
     {
-        string[] commands;
+        private string[] commands;
+        private FastPriorityQueue<MemoryItem> memoryQueue;
+        private const int MAX_MEMORY_ITEMS = 100;
+        MemoryItem nextReminder;
 
         public bool CanRespond(ResponseContext context)
         {
@@ -33,7 +32,7 @@ namespace MemoryBot.Responses
 
         public BotMessage GetResponse(ResponseContext context)
         {
-            LoadJson();
+            LoadCommands();
             var msg = Utils.StringBuilder(context.Message.Text);
             var user = context.Message.User.FormattedUserID;
 
@@ -43,7 +42,9 @@ namespace MemoryBot.Responses
                 {
                     if (context.Message.Text.Contains(command))
                     {
-                        writeMemory(msg, user, DateTime.Now);
+                        //Somehow communicate that it is reminder timer to user throught GetResponse.
+                            //maybe look at marks code for this
+                        WriteMemory(msg, user, DateTime.Now.AddSeconds(15));
                         return new BotMessage { Text = "I'll remind you" };
                     }
                 }
@@ -51,7 +52,7 @@ namespace MemoryBot.Responses
             return new BotMessage { Text =  string.Format("Hello {0}",user)};
         }
 
-        public void LoadJson()
+        private void LoadCommands()
         {
             using (StreamReader file = File.OpenText(@"../../commands.json"))
             {
@@ -60,29 +61,64 @@ namespace MemoryBot.Responses
             }
         }
 
-        public void writeMemory(string message, string user, DateTime reminderTime)
+        private void WriteMemory(string message, string user, DateTime reminderTime)
         {
             // save to memory cache
-            string[] memoryItem = new string[3];
-            memoryItem[0] = user;
-            memoryItem[1] = message;
-            memoryItem[2] = reminderTime.ToString();
+            MemoryItem memoryInput = new MemoryItem();
+            memoryInput.UserID = user;
+            memoryInput.ReminderContent = message;
+            memoryInput.ReminderTime = reminderTime;
+            memoryInput.Priority = GetDateTimeDifference(memoryInput.ReminderTime);
 
             JavaScriptSerializer serializer = new JavaScriptSerializer();
 
-            List<string[]> memory = readMemory();
-            memory.Add(memoryItem);
+            List<MemoryItem> memory = ReadMemory();
+            memory.Add(memoryInput);
 
             var data = serializer.Serialize(memory);
             File.WriteAllText(@"../../memory.json", data);
         }
-        public List<string[]> readMemory()
+        private List<MemoryItem> ReadMemory()
         {
             using (StreamReader file = File.OpenText(@"../../memory.json"))
             {
                 JsonSerializer serializer = new JsonSerializer();
-                var memory = serializer.Deserialize(file, typeof(List<string[]>));
-                return (List<string[]>)memory;
+                List<MemoryItem> memory = (List<MemoryItem>)serializer.Deserialize(file, typeof(List<MemoryItem>));
+                EnqueueMemory(memory);
+                return memory;
+            }
+        }
+
+        private double GetDateTimeDifference(DateTime reminderTime)
+        {
+            double diffInSeconds = (reminderTime - DateTime.Now).TotalSeconds;
+            return diffInSeconds;
+        }
+
+        private void EnqueueMemory(List<MemoryItem> memory)
+        {
+            memoryQueue = new FastPriorityQueue<MemoryItem>(MAX_MEMORY_ITEMS);
+            foreach (MemoryItem MI in memory)
+            {
+                memoryQueue.Enqueue(MI, MI.Priority);
+            }
+            GetNextReminder();
+        }
+
+        private void GetNextReminder()
+        {
+            nextReminder = memoryQueue.Dequeue();
+            Timer timer = new Timer(TimerCallback, null, 0, 2000);
+        }
+
+        private void TimerCallback(Object o)
+        {
+            if (memoryQueue.Count != 0)
+            {
+                if(nextReminder.ReminderTime == DateTime.Now)
+                {
+                    GetNextReminder();
+                }
             }
         }
     }

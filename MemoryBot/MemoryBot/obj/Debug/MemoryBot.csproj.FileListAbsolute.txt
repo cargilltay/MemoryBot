@@ -20,6 +20,8 @@ C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\D
 C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\System.Net.Http.Formatting.dll
 C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\System.Web.Http.xml
 C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\System.Net.Http.Formatting.xml
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\Priority Queue.dll
+C:\Users\TaylorC\Documents\Visual Studio 2015\Projects\MemoryBot\MemoryBot\bin\Debug\Priority Queue.pdb
 C:\Users\TaylorC\Desktop\MemoryBot\MemoryBot\MemoryBot\bin\Debug\MemoryBot.exe.config
 C:\Users\TaylorC\Desktop\MemoryBot\MemoryBot\MemoryBot\obj\Debug\MemoryBot.exe
 C:\Users\TaylorC\Desktop\MemoryBot\MemoryBot\MemoryBot\obj\Debug\MemoryBot.pdb
