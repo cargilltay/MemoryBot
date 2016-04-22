@@ -93,9 +93,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Memory.cs" />
     <Compile Include="MemoryItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Responses\MemoryMaker.cs" />
     <Compile Include="Responses\MemoryResponder.cs" />
     <Compile Include="Untils.cs" />
   </ItemGroup>

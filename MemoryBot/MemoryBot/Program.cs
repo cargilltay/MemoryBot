@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 using MargieBot.Models;
 using MargieBot.Responders;
 using MargieBot;
+using System.Threading;
 
 namespace MemoryBot
 {
     class Program
     {
+        //private static Timer brainTimer;
+
         static void Main(string[] args)
         {
             InitBot();
@@ -28,11 +31,12 @@ namespace MemoryBot
                     memory.Say(new BotMessage() { Text = "Hi Taylor!" });
             };
 
-            await memory.Connect("************************************");
+            await memory.Connect("********************************");
         }
 
         public static void InitResponses(Bot bot)
         {
+            bot.Responders.Add(new Responses.MemoryMaker());
             bot.Responders.Add(new Responses.MemoryResponder());
         }
     }

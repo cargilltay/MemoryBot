@@ -23,5 +23,10 @@ namespace MemoryBot
 
             return clean;
         }
+        public static double GetDateTimeDifference(DateTime reminderTime)
+        {
+            double diffInSeconds = (reminderTime - DateTime.Now).TotalSeconds;
+            return diffInSeconds;
+        }
     }
 }
