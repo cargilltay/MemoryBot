@@ -1,11 +1,7 @@
-﻿using MargieBot;
-using MargieBot.Models;
+﻿using MargieBot.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace MemoryBot
 {
@@ -82,7 +78,7 @@ namespace MemoryBot
             return diffInSeconds;
         }
         
-        public static void Say(MemoryItem nextReminder)
+        public static void Say(ReminderItem nextReminder)
         {
             SlackChatHub H = new SlackChatHub();
             H.ID = GetUserDMChannelID(nextReminder.UserName);

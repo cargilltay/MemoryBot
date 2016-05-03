@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MargieBot.Models;
-using MargieBot.Responders;
 using MargieBot;
-using System.Threading;
 
 namespace MemoryBot
 {
@@ -34,7 +28,7 @@ namespace MemoryBot
                     //Utils.PrintChatHubInfo();
 
                     SlackChatHub H = new SlackChatHub();
-                    H.ID = "*********";
+                    H.ID = "********";
                     Console.WriteLine("Connected");
                     BotMessage ConnectionMessage = new BotMessage();
                     ConnectionMessage.Text = "hello taylor";
@@ -43,14 +37,14 @@ namespace MemoryBot
                 }
             };
 
-            await memoryBot.Connect("**********************");
-            Memory.StartBrain();
+            await memoryBot.Connect("***************);
+            Reminder.StartBrain();
         }
 
         public static void InitResponses(Bot bot)
         {
-            bot.Responders.Add(new Responses.MemoryMaker());
-            bot.Responders.Add(new Responses.MemoryResponder());
+            bot.Responders.Add(new Responses.ReminderMaker());
+            bot.Responders.Add(new Responses.ReminderResponder());
         }
     }
 }
