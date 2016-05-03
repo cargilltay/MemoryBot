@@ -13,14 +13,10 @@ namespace MemoryBot.Responses
 {
     class MemoryResponder : IResponder
     {
-        private static Timer brainTimer;
-
         public bool CanRespond(ResponseContext context)
         {
-            Memory.GetNextReminder();
-            brainTimer = new Timer(Memory.MemoryTimeComparison, null, 0, 2000);
             bool canTalk = (context.Message.MentionsBot || context.Message.ChatHub.Type == SlackChatHubType.DM);
-            if (canTalk)
+            if (canTalk || Memory.nextReminder != null)
             {
                 return true;
             }
@@ -31,9 +27,9 @@ namespace MemoryBot.Responses
         {
             if(Memory.nextReminder != null)
             {
-
-                Console.WriteLine("HELLO");
                 var reminder = Memory.nextReminder;
+                Memory.nextReminder = null;
+
                 return new BotMessage { Text = reminder.UserID + ", here is your reminder:" + reminder.ReminderContent};
             }
             return new BotMessage {Text =  ""};

@@ -31,6 +31,9 @@ namespace MemoryBot.Responses
             LoadCommands();
             var msg = Utils.StringBuilder(context.Message.Text);
             var user = context.Message.User.FormattedUserID;
+            //context.UserNameCache
+            //Utils.PrintUserNameCache(context);
+
 
             if (context.Message.MentionsBot)
             {
@@ -38,7 +41,8 @@ namespace MemoryBot.Responses
                 {
                     if (context.Message.Text.Contains(command))
                     {
-                        Memory.WriteMemory(msg, user, DateTime.Now);
+                        Console.WriteLine(context.Message.User.ID);
+                        Memory.WriteMemory(msg, user, DateTime.Now.AddMinutes(2), Utils.GetUserName(context));
                         return new BotMessage { Text = "I'll remind you" };
                     }
                 }

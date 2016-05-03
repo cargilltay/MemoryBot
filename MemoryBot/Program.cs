@@ -12,26 +12,39 @@ namespace MemoryBot
 {
     class Program
     {
-        //private static Timer brainTimer;
+        public static Bot memoryBot;
 
         static void Main(string[] args)
         {
             InitBot();
+
             while (true) { };
         }
-        
+
         public static async void InitBot()
         {
-            Bot memory = new Bot();
-            InitResponses(memory);
+            memoryBot = new Bot();
 
-            memory.ConnectionStatusChanged += (bool isConnected) =>
+            InitResponses(memoryBot);
+
+            memoryBot.ConnectionStatusChanged += (bool isConnected) =>
             {
                 if (isConnected)
-                    memory.Say(new BotMessage() { Text = "Hi Taylor!" });
+                {
+                    //Utils.PrintChatHubInfo();
+
+                    SlackChatHub H = new SlackChatHub();
+                    H.ID = "*********";
+                    Console.WriteLine("Connected");
+                    BotMessage ConnectionMessage = new BotMessage();
+                    ConnectionMessage.Text = "hello taylor";
+                    ConnectionMessage.ChatHub = H;
+                    memoryBot.Say(ConnectionMessage).Wait();
+                }
             };
 
-            await memory.Connect("********************************");
+            await memoryBot.Connect("**********************");
+            Memory.StartBrain();
         }
 
         public static void InitResponses(Bot bot)

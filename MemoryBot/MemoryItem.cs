@@ -10,6 +10,7 @@ namespace MemoryBot
     class MemoryItem : FastPriorityQueueNode
     {
         public string UserID;
+        public string UserName;
         public string ReminderContent;
         public DateTime ReminderTime;
     }
