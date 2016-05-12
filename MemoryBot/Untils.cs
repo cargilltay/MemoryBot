@@ -1,12 +1,20 @@
 ﻿using MargieBot.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace MemoryBot
 {
     class Utils
     {
+        //https://www.youtube.com/watch?v=p3Fvy-JOaVw
+        private static char[] trim = { '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '[', ']', '{', '}', '\\', '|', ';', ':', '"', '\'', ',', '<', '.', '>', '/', '?' };
+        private static string MemoryAccessType;
+        private static object writeItem;
+
+
         public static string StringBuilder(string message)
         {
             var clean = message.ToLower();
@@ -78,7 +86,7 @@ namespace MemoryBot
             return diffInSeconds;
         }
         
-        public static void Say(ReminderItem nextReminder)
+        public static void Say(ReminderNode nextReminder)
         {
             SlackChatHub H = new SlackChatHub();
             H.ID = GetUserDMChannelID(nextReminder.UserName);
@@ -86,6 +94,44 @@ namespace MemoryBot
             ConnectionMessage.Text = nextReminder.ReminderContent;
             ConnectionMessage.ChatHub = H;
             Program.memoryBot.Say(ConnectionMessage).Wait();
+        }
+
+        public static void WriteMemory()
+        {
+            JsonSerializer serializer = new JsonSerializer();
+            using (StreamWriter sw = new StreamWriter(@"../../Memory/ReminderMemory.json"))
+            using (JsonWriter writer = new JsonTextWriter(sw))
+            {
+                if(MemoryAccessType == "Reminder") serializer.Serialize(writer, Reminder.reminderQueue);
+                //if(MemoryAccessType == "Memory") serializer.Serialize(writer, SOMEITEM)
+            }
+        }
+
+        public static object ReadMemory()
+        {
+            using (StreamReader file = File.OpenText(@"../../Memory/ReminderMemory.json"))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+
+                if(MemoryAccessType == "Reminder")
+                {
+                   return (List<ReminderNode>)serializer.Deserialize(file, typeof(List<ReminderNode>));
+
+                   
+                }
+                else if(MemoryAccessType == "Memory")
+                {
+                    //return something for memory
+                    return "";
+                }
+
+                return "";
+            }
+        }
+
+        public static void SetMemoryAccessType(string type)
+        {
+            MemoryAccessType = type;
         }
     }
 }

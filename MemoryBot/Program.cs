@@ -26,9 +26,10 @@ namespace MemoryBot
                 if (isConnected)
                 {
                     //Utils.PrintChatHubInfo();
+                    Memory.TestAccord();
 
                     SlackChatHub H = new SlackChatHub();
-                    H.ID = "********";
+                    H.ID = "D10DCBHSB";
                     Console.WriteLine("Connected");
                     BotMessage ConnectionMessage = new BotMessage();
                     ConnectionMessage.Text = "hello taylor";
@@ -37,14 +38,14 @@ namespace MemoryBot
                 }
             };
 
-            await memoryBot.Connect("***************);
+            await memoryBot.Connect("**************************");
             Reminder.StartBrain();
         }
 
         public static void InitResponses(Bot bot)
         {
             bot.Responders.Add(new Responses.ReminderMaker());
-            bot.Responders.Add(new Responses.ReminderResponder());
+            bot.Responders.Add(new Responses.MemoryMaker());
         }
     }
 }

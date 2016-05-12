@@ -1,108 +1,99 @@
-﻿using MargieBot.Models;
-using Newtonsoft.Json;
-using Priority_Queue;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
+﻿using System;
+using Accord.MachineLearning.DecisionTrees;
+using Accord;
+using System.Data;
+using Accord.Statistics.Filters;
+using Accord.MachineLearning.DecisionTrees.Learning;
+using Accord.Math;
 
 namespace MemoryBot
 {
     static class Memory
     {
-        private static Timer brainTimer;
-        public static FastPriorityQueue<MemoryItem> memoryQueue;
-        public static MemoryItem nextReminder;
-        private static MemoryItem memoryHolder;
-        private const int MAX_MEMORY_ITEMS = 100;
-
-        public static void WriteMemory(string message, string user, DateTime reminderTime, string userName)
+        public static void AddMemoryItem(string message, string user, string userName)
         {
-            // save to memory cache
-            //Console.WriteLine(reminderTime);
 
-            MemoryItem memoryInput = new MemoryItem();
-            memoryInput.UserID = user;
-            memoryInput.UserName = userName;
-            memoryInput.ReminderContent = message;
-            memoryInput.ReminderTime = reminderTime;
-            memoryInput.Priority = Utils.GetDateTimeDifference(memoryInput.ReminderTime);
+            MemoryNode MemoryInput = new MemoryNode();
+            MemoryInput.UserID = user;
+            MemoryInput.UserName = userName;
+            MemoryInput.MemoryString = message;
 
-            JsonSerializer serializer = new JsonSerializer();
+            Utils.SetMemoryAccessType("Memory");
+            Utils.ReadMemory();
+            Utils.WriteMemory();
+        }
 
-            List<MemoryItem> memory = ReadMemory();
-            RePrioritizeMemory(memory);
-            memory.Add(memoryInput);
-            
-            using (StreamWriter sw = new StreamWriter(@"../../memory.json"))
-            using (JsonWriter writer = new JsonTextWriter(sw))
+        public static void TestAccord()
+        {
+
+            /*
+             * http://crsouza.com/2012/01/decision-trees-in-c/
+             * */
+
+
+            DataTable data = new DataTable("Memory");
+
+            /*add People names/ID to columns dynamically*/
+            data.Columns.Add("Day", "Outlook", "Temperature", "Humidity", "Wind", "PlayTennis");
+
+            /*possibly add sentences to this?
+            maybe keywords*/
+            data.Rows.Add("D1", "Sunny", "Hot", "High", "Weak", "No");
+            data.Rows.Add("D1", "Sunny", "Hot", "High", "Weak", "No");
+            data.Rows.Add("D2", "Sunny", "Hot", "High", "Strong", "No");
+            data.Rows.Add("D3", "Overcast", "Hot", "High", "Weak", "Yes");
+            data.Rows.Add("D4", "Rain", "Mild", "High", "Weak", "Yes");
+            data.Rows.Add("D5", "Rain", "Cool", "Normal", "Weak", "Yes");
+            data.Rows.Add("D6", "Rain", "Cool", "Normal", "Strong", "No");
+            data.Rows.Add("D7", "Overcast", "Cool", "Normal", "Strong", "Yes");
+            data.Rows.Add("D8", "Sunny", "Mild", "High", "Weak", "No");
+            data.Rows.Add("D9", "Sunny", "Cool", "Normal", "Weak", "Yes");
+            data.Rows.Add("D10", "Rain", "Mild", "Normal", "Weak", "Yes");
+            data.Rows.Add("D11", "Sunny", "Mild", "Normal", "Strong", "Yes");
+            data.Rows.Add("D12", "Overcast", "Mild", "High", "Strong", "Yes");
+            data.Rows.Add("D13", "Overcast", "Hot", "Normal", "Weak", "Yes");
+            data.Rows.Add("D14", "Rain", "Mild", "High", "Strong", "No");
+
+            // Create a new codification codebook to
+            // convert strings into integer symbols
+            Codification codebook = new Codification(data,"Outlook", "Temperature", "Humidity", "Wind", "PlayTennis");
+
+            /* NO IDEA FOR THIS */
+            DecisionVariable[] attributes =
             {
-                serializer.Serialize(writer, memory);
-            }
-        }
-        public static List<MemoryItem> ReadMemory()
-        {
-            using (StreamReader file = File.OpenText(@"../../memory.json"))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                List<MemoryItem> memory = (List<MemoryItem>)serializer.Deserialize(file, typeof(List<MemoryItem>));
-                EnqueueMemory(memory);
-                return memory;
-            }
-        }
+                new DecisionVariable("Outlook", 3), // 3 possible values (Sunny, overcast, rain)
+                new DecisionVariable("Temperature", 3), // 3 possible values (Hot, mild, cool)  
+                new DecisionVariable("Humidity",    2), // 2 possible values (High, normal)    
+                new DecisionVariable("Wind",        2)  // 2 possible values (Weak, strong) 
+            };
 
-        private static void EnqueueMemory(List<MemoryItem> memory)
-        {
-            memoryQueue = new FastPriorityQueue<MemoryItem>(MAX_MEMORY_ITEMS);
-            foreach (MemoryItem MI in memory)
-            {
-                memoryQueue.Enqueue(MI, MI.Priority);
-            }
-        }
 
-        private static void RePrioritizeMemory(List<MemoryItem> memory)
-        {
-            //ReSorts memory to prioritize the most urgent memory
-            foreach(MemoryItem MI in memory)
-            {
-                MI.Priority = Utils.GetDateTimeDifference(MI.ReminderTime);
-            }
-        }
+            /* For possible values, make it one so it narrows to one individual fact about a word*/
+            int classCount = 2; // 2 possible output values for playing tennis: yes or no
 
-        public static void GetNextReminder()
-        {
-            if(memoryQueue != null && memoryQueue.Count != 0)
-            {
-                Console.WriteLine("MEMORY QUEUE IS NOT EMPTY");
-                memoryHolder = memoryQueue.Dequeue();
-            }
+
+            DecisionTree tree = new DecisionTree(attributes, classCount);
+
+            // Create a new instance of the ID3 algorithm
+            ID3Learning id3learning = new ID3Learning(tree);
+
+            // Translate our training data into integer symbols using our codebook:
+            DataTable symbols = codebook.Apply(data);
+            int[][] inputs = symbols.ToArray<int>("Outlook", "Temperature", "Humidity", "Wind");
+            int[] outputs = symbols.ToIntArray("PlayTennis").GetColumn(0);
+
+            // Learn the training instances!
+            id3learning.Run(inputs, outputs);
+
+            /*This is how we will query the memory*/
+            int[] query = codebook.Translate("Sunny", "Hot", "High", "Strong");
+            int output = tree.Compute(query);
+
+
+            /*Respond to user*/
+            string answer = codebook.Translate("PlayTennis", output); // answer will be "No".
+            Console.WriteLine(answer);
         }
 
-        public static void StartBrain()
-        {
-            ReadMemory();
-            GetNextReminder();
-
-            if (brainTimer != null)
-                brainTimer.Change(Timeout.Infinite, Timeout.Infinite);
-
-            brainTimer = new Timer(MemoryTimeComparison, null, 0, 2000);
-        }
-
-        public static void MemoryTimeComparison(Object o)
-        {
-            Console.WriteLine("Tick");
-
-            if (memoryQueue != null && memoryHolder != null && memoryQueue.Count != 0)
-            {
-                Console.WriteLine((memoryHolder.ReminderTime - DateTime.Now).TotalMinutes);
-                if ((memoryHolder.ReminderTime - DateTime.Now).TotalMinutes <= 1)
-                {
-                    nextReminder = memoryHolder;
-                    Utils.Say(nextReminder);
-                    GetNextReminder();
-                }
-            }
-        }
     }
 }

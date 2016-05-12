@@ -1,11 +1,12 @@
-﻿using MargieBot.Models;
-using MargieBot.Responders;
-using Newtonsoft.Json;
+﻿using MargieBot.Responders;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using MargieBot.Models;
 using System.IO;
-using Priority_Queue;
-using System.Threading;
+using Newtonsoft.Json;
 
 namespace MemoryBot.Responses
 {
@@ -15,13 +16,11 @@ namespace MemoryBot.Responses
 
         public bool CanRespond(ResponseContext context)
         {
-            //logs messages from slack
-            //Console.WriteLine(context.Message.Text);
-            
+
             bool canTalk = (context.Message.MentionsBot || context.Message.ChatHub.Type == SlackChatHubType.DM);
             if (canTalk)
             {
-                    return true;
+                return true;
             }
             return false;
         }
@@ -31,28 +30,26 @@ namespace MemoryBot.Responses
             LoadCommands();
             var msg = Utils.StringBuilder(context.Message.Text);
             var user = context.Message.User.FormattedUserID;
-            //context.UserNameCache
-            //Utils.PrintUserNameCache(context);
-
 
             if (context.Message.MentionsBot)
             {
                 foreach (string command in commands)
                 {
-                    if (context.Message.Text.Contains(command))
+                    if (context.Message.Text.ToLower().Contains(command))
                     {
                         Console.WriteLine(context.Message.User.ID);
-                        Memory.WriteMemory(msg, user, DateTime.Now.AddMinutes(2), Utils.GetUserName(context));
-                        return new BotMessage { Text = "I'll remind you" };
+                        Memory.AddMemoryItem(msg, user, Utils.GetUserName(context));
+                        return new BotMessage { Text = "I'll Shall Not Forget!" };
                     }
                 }
             }
-            return new BotMessage { Text =  string.Format("Hello {0}",user)};
+            return new BotMessage { Text = ""};
+            //return new BotMessage { Text = string.Format("Hello {0}, I do not recognize your command", user) };
         }
 
         private void LoadCommands()
         {
-            using (StreamReader file = File.OpenText(@"../../commands.json"))
+            using (StreamReader file = File.OpenText(@"../../Commands/MemoryCommands.json"))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 commands = (string[])serializer.Deserialize(file, typeof(string[]));

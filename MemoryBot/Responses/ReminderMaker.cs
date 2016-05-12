@@ -12,9 +12,6 @@ namespace MemoryBot.Responses
 
         public bool CanRespond(ResponseContext context)
         {
-            //logs messages from slack
-            //Console.WriteLine(context.Message.Text);
-            
             bool canTalk = (context.Message.MentionsBot || context.Message.ChatHub.Type == SlackChatHubType.DM);
             if (canTalk)
             {
@@ -28,15 +25,12 @@ namespace MemoryBot.Responses
             LoadCommands();
             var msg = Utils.StringBuilder(context.Message.Text);
             var user = context.Message.User.FormattedUserID;
-            //context.UserNameCache
-            //Utils.PrintUserNameCache(context);
-
 
             if (context.Message.MentionsBot)
             {
                 foreach (string command in commands)
                 {
-                    if (context.Message.Text.Contains(command))
+                    if (context.Message.Text.ToLower().Contains(command))
                     {
                         Console.WriteLine(context.Message.User.ID);
                         Reminder.AddReminderItem(msg, user, DateTime.Now.AddMinutes(2), Utils.GetUserName(context));
@@ -44,12 +38,12 @@ namespace MemoryBot.Responses
                     }
                 }
             }
-            return new BotMessage { Text =  string.Format("Hello {0}",user)};
+            return new BotMessage { Text =  ""};
         }
 
         private void LoadCommands()
         {
-            using (StreamReader file = File.OpenText(@"../../commands.json"))
+            using (StreamReader file = File.OpenText(@"../../Commands/ReminderCommands.json"))
             {
                 JsonSerializer serializer = new JsonSerializer();
                 commands = (string[])serializer.Deserialize(file, typeof(string[]));
