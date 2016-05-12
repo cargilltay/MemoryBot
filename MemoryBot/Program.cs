@@ -38,7 +38,7 @@ namespace MemoryBot
                 }
             };
 
-            await memoryBot.Connect("**************************");
+            await memoryBot.Connect("*******************************");
             Reminder.StartBrain();
         }
 
